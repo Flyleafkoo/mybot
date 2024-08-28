@@ -1,0 +1,21 @@
+2024-08-26 16:59:10,550 - ERROR - Ошибка при отправке документа 'Заявление на увольнение.docx': [Errno 2] No such file or directory: 'C:\\Users\\s_shilovvas\\PycharmProjects\\pythonProject1\\Заявление на увольнение.docx'
+2024-08-26 16:59:14,136 - ERROR - Ошибка при отправке документа 'Заявление на увольнение.docx': [Errno 2] No such file or directory: 'C:\\Users\\s_shilovvas\\PycharmProjects\\pythonProject1\\Заявление на увольнение.docx'
+2024-08-26 16:59:15,030 - ERROR - Ошибка при отправке документа 'Заявление на отзыв заявления об увольнении.docx': [Errno 2] No such file or directory: 'C:\\Users\\s_shilovvas\\PycharmProjects\\pythonProject1\\Заявление на отзыв заявления об увольнении.docx'
+2024-08-26 17:45:09,124 - ERROR - Ошибка при запуске бота: ('Connection aborted.', ConnectionResetError(10054, 'Удаленный хост принудительно разорвал существующее подключение', None, 10054, None))
+2024-08-27 10:16:00,408 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:16:00,463 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:16:00,463 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:16:00,463 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:16:00,463 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:18:00,656 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:18:00,657 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:18:00,657 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:18:00,658 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 10:18:00,658 - ERROR - Ошибка при отправке утреннего сообщения: 'int' object is not iterable
+2024-08-27 15:42:44,522 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-27 15:50:54,390 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-27 16:00:41,189 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-27 16:01:04,034 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-27 16:03:50,604 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-27 16:15:08,684 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-27 16:17:02,895 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
