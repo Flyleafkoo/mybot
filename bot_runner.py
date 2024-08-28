@@ -20,7 +20,7 @@ class BotRunner:
         self.message_handler = MessageHandler(self.bot, DocumentSender(self.bot))
         self.scheduler = Scheduler(token, group_ids, specific_group_id)
         self.link_storage = LinkStorage()
-        self.site_parser = SiteParser('https://glavkniga.ru/news',
+        self.site_parser = SiteParser('https://www.garant.ru/ia/aggregator/?tag_id=1606',
                                       self.link_storage)  # Замените на ваш URL
         self.link_sender = LinkSender(self.bot, self.link_storage, self.site_parser, self.group_ids)
 

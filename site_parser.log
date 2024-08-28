@@ -146,3 +146,13 @@ telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsucc
 2024-08-28 10:08:12,118 - INFO - Обновлено 113 новых ссылок.
 2024-08-28 10:08:12,161 - INFO - Ссылка отправлена в группу -1002176227393: https://glavkniga.ru/news/17877
 2024-08-28 10:08:12,241 - ERROR - Ошибка при отправке ссылки в группу -1004269879858: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+2024-08-28 13:19:40,115 - INFO - Запуск бота...
+2024-08-28 13:19:40,512 - INFO - Найдено 308 ссылок на странице https://glavkniga.ru/news
+2024-08-28 13:19:40,581 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-28 13:19:40,965 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-28 13:19:40,966 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-28 13:19:40,983 - ERROR - Ошибка при обработке неизвестной команды: TeleBot.send_message() missing 2 required positional arguments: 'chat_id' and 'text'
+2024-08-28 13:22:38,058 - ERROR - Произошла ошибка: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2024-08-28 13:22:38,058 - INFO - Попытка переподключения через 30 секунд...
+2024-08-28 13:23:08,069 - INFO - Запуск бота...
+2024-08-28 13:24:57,462 - INFO - Запуск бота...
