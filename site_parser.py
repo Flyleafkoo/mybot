@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 
+
 class SiteParser:
     def __init__(self, url, link_storage):
         self.url = url
@@ -53,4 +54,3 @@ class SiteParser:
             logging.info("Нет новых ссылок для обновления.")
 
         return new_links
-

@@ -4,6 +4,7 @@ import random
 from threading import Thread
 from datetime import datetime
 
+
 class LinkSender:
     def __init__(self, bot, link_storage, site_parser, group_ids):
         self.bot = bot
@@ -34,7 +35,8 @@ class LinkSender:
         try:
             links = self.link_storage.load_sent_links()
             if links:
-                filtered_links = [link for link in links if self.is_valid_link(link) and not self.is_advertisement(link)]
+                filtered_links = [link for link in links if
+                                  self.is_valid_link(link) and not self.is_advertisement(link)]
                 if filtered_links:
                     link = random.choice(filtered_links)  # Выбираем случайную ссылку
                     self.link_storage.save_sent_links(set(filtered_links) - {link})  # Удаляем выбранную ссылку
