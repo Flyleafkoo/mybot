@@ -5,14 +5,6 @@ from datetime import datetime, timedelta
 import telebot
 
 
-def run_scheduler():
-    logging.info("Запуск планировщика...")
-    while True:
-        logging.debug("Проверка расписания...")
-        schedule.run_pending()
-        time.sleep(100)
-
-
 class Scheduler:
     def __init__(self, bot_token, group_ids, specific_group_id, employee_database):
         self.bot = telebot.TeleBot(bot_token)
@@ -32,16 +24,13 @@ class Scheduler:
         logging.getLogger().addHandler(console_handler)
 
     def setup_schedule(self):
-        schedule.every().day.at("08:47").do(self.send_good_morning)
-        schedule.every().day.at("08:30").do(self.daily_check)
-        schedule.every().day.at("08:51").do(self.send_birthday_messages)
+        schedule.every().day.at("08:30").do(self.send_good_morning)
+        schedule.every().day.at("09:00").do(self.send_birthday_messages)
+        schedule.every().day.at("13:00").do(self.send_monthly_update)
+        schedule.every().day.at("12:00").do(self.send_message_25)
+        schedule.every().day.at("09:00").do(self.send_last_workday_message)
+        schedule.every().day.at("09:00").do(self.send_first_workday_message)
 
-    def daily_check(self):
-        now = datetime.now()
-        if now.hour == 9:
-            self.send_monthly_update()
-            self.send_last_workday_message()
-            self.send_25th_day_message()
 
     def send_good_morning(self):
         now = datetime.now()
@@ -64,18 +53,50 @@ class Scheduler:
         except Exception as e:
             logging.error(f"Ошибка при отправке утреннего сообщения: {e}")
 
+
+    def send_message_25(self):
+        now = datetime.now()
+        # Проверяем, что сегодня 23 число и не выходной
+        if now.day != 23 or now.weekday() >= 5:  # 5 - суббота, 6 - воскресенье
+            logging.info("Сегодня не 23 число или выходной, напоминание не отправляется.")
+            return
+
+
+        logging.info("Напоминания начинается")
+        try:
+            if not self.group_ids:
+                logging.warning("Список group_ids пуст!")
+                return
+            for group_id in self.group_ids:
+                try:
+                    logging.info(f"Отправка сообщения в группу: {group_id}")
+                    result = self.bot.send_message(group_id, 'Коллеги! не забываем сформировать журналы до 25числа!')
+                    logging.info(f"Результат отправки: {result}")
+                except Exception as e:
+                    logging.error(f"Ошибка при отправке в группу {group_id}: {e}")
+        except Exception as e:
+            logging.error(f"Ошибка при отправке утреннего сообщения: {e}")
+
     def send_monthly_update(self):
         now = datetime.now()
-        fifteenth, last_weekday = self.get_message_dates()
+        if now.day != 15 or now.day != 30:
+            logging.info("Сегодня не 15 и не 30 число или выходной, напоминание не отправляется.")
+            return
 
-        logging.debug(
-            f"Текущая дата: {now.date()}, 15-е число: {fifteenth.date()}, последний рабочий день: {last_weekday.date()}")
-
-        if now.date() == fifteenth.date() or now.date() == last_weekday.date():
-            message = "Уважаемые коллеги, не забываем о необходимости сдачи отчета о проделанной работе"
-            self._send_to_groups(message)
-        else:
-            logging.info("Сегодня не нужный день для отправки ежемесячного обновления")
+        logging.info("Напоминания начинается")
+        try:
+            if not self.group_ids:
+                logging.warning("Список group_ids пуст!")
+                return
+            for group_id in self.group_ids:
+                try:
+                    logging.info(f"Отправка сообщения в группу: {group_id}")
+                    result = self.bot.send_message(group_id, 'Коллеги! Не забываем о необходимости отправки отчета о проделанной работе!')
+                    logging.info(f"Результат отправки: {result}")
+                except Exception as e:
+                    logging.error(f"Ошибка при отправке в группу {group_id}: {e}")
+        except Exception as e:
+            logging.error(f"Ошибка при отправке утреннего сообщения: {e}")
 
     def send_last_workday_message(self):
         now = datetime.now()
@@ -89,21 +110,7 @@ class Scheduler:
         else:
             logging.info("Сегодня не последний рабочий день месяца")
 
-    def send_25th_day_message(self):
-        def send_25th_day_message(self):
-            now = datetime.now()
-            if now.day == 25 and now.weekday() < 5:  # Проверка, что 25-е — будний день
-                message = "Уважаемые коллеги, не забываем сформировать журналы!"
-                self._send_to_groups(message)
-            else:
-                # Если 25-е выпадает на выходные, отправить в последний рабочий день перед выходными
-                days_to_subtract = (now.weekday() - 4) % 7
-                previous_workday = now - timedelta(days=days_to_subtract)
-                if previous_workday.day == 25:
-                    message = "Уважаемые коллеги, не забываем сформировать журналы!"
-                    self._send_to_groups(message)
-                else:
-                    logging.info("Сегодня не 25 число и не выходной день")
+
 
     def send_first_workday_message(self):
         now = datetime.now()
@@ -154,3 +161,11 @@ class Scheduler:
             self._send_to_groups(message)
         else:
             logging.info("Сегодня нет именинников.")
+
+def run_scheduler():
+    logging.info("Запуск планировщика...")
+    while True:
+        logging.debug("Проверка расписания...")
+        schedule.run_pending()
+        time.sleep(100)
+

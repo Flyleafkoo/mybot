@@ -53,8 +53,9 @@ class LinkSender:
     def run_sender(self):
         while True:
             now = datetime.now()
-            if now.hour in [9, 17]:  # 6:00 и 18:00
-                self.send_links()
-                # Ждем 1 час, чтобы избежать повторного отправления в течение одного часа
-                time.sleep(3600)
-            time.sleep(60)  # Проверяем время каждую минуту
+            if now.weekday() >= 5:
+                if now.hour in [9, 12, 17]:
+                    self.send_links()
+                    # Ждем 1 час, чтобы избежать повторного отправления в течение одного часа
+                    time.sleep(3600)
+                time.sleep(60)  # Проверяем время каждую минуту

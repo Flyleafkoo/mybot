@@ -10,9 +10,21 @@ class ExcelComparer:
         self.df2 = pd.read_excel(file2)
         self.results = pd.DataFrame()
 
+    def preprocess_column(self, column):
+        # Преобразует текст в нижний регистр и удаляет все разделители
+        return column.str.lower().str.replace(r'\s+', '', regex=True)
+
     def compare(self):
         logging.info("Начало сравнения данных.")
-        self.results[self.df1.columns[0]] = self.df1[self.df1.columns[0]]
+        df1_column = self.df1[self.df1.columns[0]]
+        df2_column = self.df2[self.df2.columns[0]]
+
+        # Преобразование столбцов
+        self.df1[self.df1.columns[0]] = self.preprocess_column(df1_column)
+        self.df2[self.df2.columns[0]] = self.preprocess_column(df2_column)
+
+        # Создаем результат с оригинальными данными
+        self.results[self.df1.columns[0]] = df1_column
 
         for index, row in self.df1.iterrows():
             name = row[self.df1.columns[0]]

@@ -5,7 +5,8 @@ from keyboard import Keyboard
 from document_sender import DocumentSender
 from file_handler import FileHandler
 import os
-from excel_comparer import ExcelComparer
+
+
 
 
 class MessageHandler:
@@ -17,6 +18,7 @@ class MessageHandler:
         self.document_sender = document_sender
         self.file_handler = file_handler
         self.document_handler = document_handler
+
         self.setup_handlers()
         self.user_states = {}
 
@@ -38,8 +40,7 @@ class MessageHandler:
             self.handle_resignation)
         self.bot.message_handler(func=lambda message: message.text.lower() in ['заявление на отзыв увольнения'])(
             self.handle_withdrawal)
-        self.bot.message_handler(func=lambda message: message.text.lower() == 'сравнить xlsx')(self.request_first_file)
-        self.bot.message_handler(content_types=['document'])(self.handle_document)
+        self.bot.message_handler(content_types=['document'])(self.document_handler.handle_pdf)
         self.bot.message_handler(func=self.is_pdf_conversion)(self.handle_pdf_conversion)
         self.bot.message_handler(func=self.is_pdf_to_word)(self.convert_pdf_to_word)
         self.bot.message_handler(func=self.is_pdf_to_excel)(self.convert_pdf_to_excel)
@@ -54,6 +55,9 @@ class MessageHandler:
 
     def is_pdf_to_excel(self, message):
         return message.text.lower() == 'pdf в excel'
+
+    def is_comparer_excel(self, message):
+        return message.text.lower() == 'сравнить xslx'
 
     def is_split_pdf(self, message):
         return message.text.lower() == 'разделить pdf'
@@ -102,35 +106,30 @@ class MessageHandler:
     def handle_leave_without_pay(self, message):
         try:
             self.document_sender.send_document(message.chat.id, 'Заявление на отпуск за свой счет.docx')
-            self.bot.send_message(message.chat.id, 'Вы выбрали Заявление на отпуск за свой счет.')
         except Exception as e:
             logging.error(f"Ошибка при обработке 'заявление на отпуск за свой счет': {e}")
 
     def handle_material_assistance(self, message):
         try:
             self.document_sender.send_document(message.chat.id, 'Материальная помощь к отпуску.docx')
-            self.bot.send_message(message.chat.id, 'Вы выбрали Материальную помощь к отпуску.')
         except Exception as e:
             logging.error(f"Ошибка при обработке 'материальная помощь к отпуску': {e}")
 
     def handle_leave_transfer(self, message):
         try:
             self.document_sender.send_document(message.chat.id, 'Заявление о переносе отпуска.docx')
-            self.bot.send_message(message.chat.id, 'Вы выбрали Заявление о переносе отпуска.')
         except Exception as e:
             logging.error(f"Ошибка при обработке 'заявление о переносе отпуска': {e}")
 
     def handle_resignation(self, message):
         try:
             self.document_sender.send_document(message.chat.id, 'Заявление на увольнение.docx')
-            self.bot.send_message(message.chat.id, 'Вы выбрали Заявление на увольнение.')
         except Exception as e:
             logging.error(f"Ошибка при обработке 'заявление на увольнение': {e}")
 
     def handle_withdrawal(self, message):
         try:
             self.document_sender.send_document(message.chat.id, 'Заявление на отзыв заявления об увольнении.docx')
-            self.bot.send_message(message.chat.id, 'Вы выбрали Заявление на отзыв увольнения.')
         except Exception as e:
             logging.error(f"Ошибка при обработке 'заявление на отзыв увольнения': {e}")
 
@@ -146,37 +145,16 @@ class MessageHandler:
 
     def convert_pdf_to_word(self, message):
         try:
-            logging.info(f"Конвертация PDF в Word для пользователя {message.from_user.id}")
-            output_filename = 'temp_file.docx'
-
-            # Добавьте логирование текущей директории
-            logging.debug(f"Текущая директория: {os.getcwd()}")
-
-            # Предположим, что метод конвертации создает файл
-            self.document_handler.convert_pdf_to_word(message.chat.id, output_filename)
-
-            # Проверка существования файла
-            if os.path.exists(output_filename):
-                self.bot.send_message(message.chat.id, "PDF успешно конвертирован в Word.")
-                try:
-                    with open(output_filename, 'rb') as doc:
-                        self.bot.send_document(message.chat.id, doc)
-                    logging.info(f"Документ '{output_filename}' успешно отправлен в чат {message.chat.id}")
-                except Exception as e:
-                    logging.error(f"Ошибка при отправке документа '{output_filename}': {e}")
-                    self.bot.send_message(message.chat.id, "Произошла ошибка при отправке документа.")
-            else:
-                logging.error("Файл не найден после конвертации.")
-                self.bot.send_message(message.chat.id, "Конвертация завершена, но файл не найден.")
+            logging.info(f"Конвертация PDF в word для пользователя {message.from_user.id}")
+            self.document_handler.convert_pdf_to_word(message.chat.id, 'temp_file')
         except Exception as e:
             logging.error(f"Ошибка при конвертации PDF в Word: {e}")
-            self.bot.send_message(message.chat.id, "Произошла ошибка при конвертации в Word.")
+            self.bot.send_message(message.chat.id, "Произошла ошибка при конвертации в Excel.")
 
     def convert_pdf_to_excel(self, message):
         try:
             logging.info(f"Конвертация PDF в Excel для пользователя {message.from_user.id}")
             self.document_handler.convert_pdf_to_excel(message.chat.id, 'temp_file')
-            self.bot.send_message(message.chat.id, "PDF успешно конвертирован в Excel.")
         except Exception as e:
             logging.error(f"Ошибка при конвертации PDF в Excel: {e}")
             self.bot.send_message(message.chat.id, "Произошла ошибка при конвертации в Excel.")
@@ -188,7 +166,6 @@ class MessageHandler:
             self.bot.send_message(message.chat.id, "PDF успешно разделен.")
         except Exception as e:
             logging.error(f"Ошибка при обработке команды 'разделить PDF': {e}")
-            self.bot.send_message(message.chat.id, "Произошла ошибка при обработке команды.")
 
     def handle_unknown(self, message):
         try:
@@ -196,48 +173,4 @@ class MessageHandler:
         except Exception as e:
             logging.error(f"Ошибка при обработке неизвестной команды: {e}")
 
-    def handle_document(self, message):
-        state = self.user_states.get(message.chat.id)
-        logging.info(f"Handling document for user {message.chat.id} with state {state}")
 
-        if state == 'waiting_for_first_file':
-            self.file1 = message.document.file_id
-            self.user_states[message.chat.id] = 'waiting_for_second_file'
-            self.bot.send_message(message.chat.id, "Первый файл получен. Теперь отправьте второй файл Excel.")
-            logging.info(f"First file received from user {message.chat.id}")
-
-        elif state == 'waiting_for_second_file':
-            self.file2 = message.document.file_id
-            self.bot.send_message(message.chat.id, "Второй файл получен. Пожалуйста, подождите, пока я сравню файлы.")
-            logging.info(f"Second file received from user {message.chat.id}")
-            self.compare_files(message)
-
-    def request_first_file(self, message):
-        logging.info(f"Requesting first file from user {message.chat.id}")
-        self.user_states[message.chat.id] = 'waiting_for_first_file'
-        self.bot.send_message(message.chat.id, "Пожалуйста, отправьте первый файл Excel.")
-
-    def compare_files(self, message):
-        logging.info(f"Comparing files for user {message.chat.id}")
-
-        file_info1 = self.bot.get_file(self.file1)
-        file_info2 = self.bot.get_file(self.file2)
-
-        downloaded_file1 = self.bot.download_file(file_info1.file_path)
-        downloaded_file2 = self.bot.download_file(file_info2.file_path)
-
-        with open('file1.xlsx', 'wb') as f1:
-            f1.write(downloaded_file1)
-
-        with open('file2.xlsx', 'wb') as f2:
-            f2.write(downloaded_file2)
-
-        comparer = ExcelComparer('file1.xlsx', 'file2.xlsx')
-        comparer.compare()
-        comparer.save_results()
-
-        with open('results.xlsx', 'rb') as doc:
-            self.bot.send_document(message.chat.id, doc)
-            logging.info(f"Comparison results sent to user {message.chat.id}")
-
-        self.user_states[message.chat.id] = None

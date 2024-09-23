@@ -33,7 +33,6 @@ class Keyboard:
     OTHER_KEYBOARD.add(
         telebot.types.KeyboardButton('Конвертация PDF'),
         telebot.types.KeyboardButton('Назад'),
-        telebot.types.KeyboardButton('сравнить XLSX')
     )
 
     PDF_CONVERSION_KEYBOARD = telebot.types.ReplyKeyboardMarkup(row_width=2)

@@ -26,7 +26,6 @@ class BotRunner:
         self.employee_database = EmployeeDatabase()
         self.document_handler = DocumentHandler(self.bot, self.file_handler, self.employee_database)
 
-        # Передаем `document_handler` в `MessageHandler`
         self.message_handler = MessageHandler(self.bot, self.document_sender, self.file_handler, self.document_handler)
 
         self.scheduler = Scheduler(token, group_ids, specific_group_id, self.employee_database)
