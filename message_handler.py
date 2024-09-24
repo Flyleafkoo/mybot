@@ -4,9 +4,6 @@ from document_handler import DocumentHandler
 from keyboard import Keyboard
 from document_sender import DocumentSender
 from file_handler import FileHandler
-import os
-
-
 
 
 class MessageHandler:
@@ -172,5 +169,3 @@ class MessageHandler:
             self.bot.send_message(message.chat.id, '', reply_markup=Keyboard.MAIN_KEYBOARD)
         except Exception as e:
             logging.error(f"Ошибка при обработке неизвестной команды: {e}")
-
-

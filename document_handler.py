@@ -1,12 +1,13 @@
-import os, io
 import logging
+import os
 from io import BytesIO
-import pandas as pd
+
 from PDFConverter import PDFConverter
 from PDF_Splitter import PDFSplitter
 from keyboard import Keyboard
 
 excel_files = []
+
 
 class DocumentHandler:
     def __init__(self, bot, file_handler, employee_database):
@@ -32,7 +33,7 @@ class DocumentHandler:
 
             self.bot.send_message(
                 message.chat.id,
-                "Выберите формат для конвертации:",
+                " ",
                 reply_markup=Keyboard.PDF_CONVERSION_KEYBOARD
             )
 
@@ -102,4 +103,3 @@ class DocumentHandler:
         except Exception as e:
             logging.error(f"Ошибка при разделении PDF: {e}")
             self.bot.send_message(chat_id, "Произошла ошибка при разделении PDF.")
-

@@ -1,6 +1,6 @@
 import os
 from PyPDF2 import PdfReader, PdfWriter
-from keyboard import Keyboard
+
 
 class PDFSplitter:
     def __init__(self, input_file, output_folder):

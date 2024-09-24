@@ -24,13 +24,13 @@ class Scheduler:
         logging.getLogger().addHandler(console_handler)
 
     def setup_schedule(self):
-        schedule.every().day.at("08:30").do(self.send_good_morning)
-        schedule.every().day.at("09:00").do(self.send_birthday_messages)
-        schedule.every().day.at("13:00").do(self.send_monthly_update)
-        schedule.every().day.at("12:00").do(self.send_message_25)
-        schedule.every().day.at("09:00").do(self.send_last_workday_message)
-        schedule.every().day.at("09:00").do(self.send_first_workday_message)
-
+        schedule.every().day.at("08:30").do(self.send_good_morning) #Пожелание доброго утра
+        schedule.every().day.at("09:00").do(self.send_birthday_messages) #День рождения из бд
+        schedule.every().day.at("13:00").do(self.send_monthly_update) #Отчеты о проделанной работе
+        schedule.every().day.at("12:00").do(self.send_message_25) #Формирование журналов операций
+        schedule.every().day.at("09:00").do(self.send_last_workday_message) #Сообщение отправляемое в последний рабочий день месяца (в моем случае амортизация"
+        schedule.every().day.at("09:00").do(self.send_first_workday_message) # Сообщение первого рабочего дня, в моем случае амортизация по правам пользования
+        schedule.every().day.at("14:00").do(self.send_SFR) # Напоминание оплаты НДФЛ и СФР
 
     def send_good_morning(self):
         now = datetime.now()
@@ -53,14 +53,12 @@ class Scheduler:
         except Exception as e:
             logging.error(f"Ошибка при отправке утреннего сообщения: {e}")
 
-
     def send_message_25(self):
         now = datetime.now()
         # Проверяем, что сегодня 23 число и не выходной
         if now.day != 23 or now.weekday() >= 5:  # 5 - суббота, 6 - воскресенье
             logging.info("Сегодня не 23 число или выходной, напоминание не отправляется.")
             return
-
 
         logging.info("Напоминания начинается")
         try:
@@ -70,7 +68,7 @@ class Scheduler:
             for group_id in self.group_ids:
                 try:
                     logging.info(f"Отправка сообщения в группу: {group_id}")
-                    result = self.bot.send_message(group_id, 'Коллеги! не забываем сформировать журналы до 25числа!')
+                    result = self.bot.send_message(group_id, 'Коллеги! не забываем сформировать журналы до 25 числа!')
                     logging.info(f"Результат отправки: {result}")
                 except Exception as e:
                     logging.error(f"Ошибка при отправке в группу {group_id}: {e}")
@@ -91,7 +89,9 @@ class Scheduler:
             for group_id in self.group_ids:
                 try:
                     logging.info(f"Отправка сообщения в группу: {group_id}")
-                    result = self.bot.send_message(group_id, 'Коллеги! Не забываем о необходимости отправки отчета о проделанной работе!')
+                    result = self.bot.send_message(group_id,
+                                                   'Коллеги! Не забываем о необходимости отправки отчета о '
+                                                   'проделанной работе!')
                     logging.info(f"Результат отправки: {result}")
                 except Exception as e:
                     logging.error(f"Ошибка при отправке в группу {group_id}: {e}")
@@ -110,7 +110,27 @@ class Scheduler:
         else:
             logging.info("Сегодня не последний рабочий день месяца")
 
+    def send_SFR(self):
+        now = datetime.now()
+        if now.day != 24:
+            logging.info("Сегодня не 24  число, напоминание не отправляется.")
+            return
 
+        logging.info("Напоминания начинается")
+        try:
+            if not self.group_ids:
+                logging.warning("Список group_ids пуст!")
+                return
+            for group_id in self.group_ids:
+                try:
+                    logging.info(f"Отправка сообщения в группу: {group_id}")
+                    result = self.bot.send_message(group_id,
+                                                   'Коллеги! Не забываем о необходимости оплаты СФР и НДФЛ до 28 числа!')
+                    logging.info(f"Результат отправки: {result}")
+                except Exception as e:
+                    logging.error(f"Ошибка при отправке в группу {group_id}: {e}")
+        except Exception as e:
+            logging.error(f"Ошибка при отправке утреннего сообщения: {e}")
 
     def send_first_workday_message(self):
         now = datetime.now()
@@ -162,10 +182,10 @@ class Scheduler:
         else:
             logging.info("Сегодня нет именинников.")
 
+
 def run_scheduler():
     logging.info("Запуск планировщика...")
     while True:
         logging.debug("Проверка расписания...")
         schedule.run_pending()
         time.sleep(100)
-

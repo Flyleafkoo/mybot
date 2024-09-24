@@ -5,6 +5,7 @@ import logging
 # Настройка логирования
 logging.basicConfig(filename='bot.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 class DocumentSender:
     def __init__(self, bot: telebot.TeleBot):
         self.bot = bot

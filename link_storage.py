@@ -2,6 +2,7 @@ import json
 import os
 import logging
 
+
 class LinkStorage:
     def __init__(self, file_path='sent_links.json'):
         self.file_path = file_path

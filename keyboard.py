@@ -1,5 +1,6 @@
 import telebot
 
+
 class Keyboard:
     MAIN_KEYBOARD = telebot.types.ReplyKeyboardMarkup(row_width=2)
     MAIN_KEYBOARD.add(
